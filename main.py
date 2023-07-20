@@ -1,16 +1,38 @@
-# This is a sample Python script.
+import os
+import openai
+from dotenv import load_dotenv
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+# Load the variables from .env file
+load_dotenv()
+
+# Set up your API key
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+def ask_chat_gpt(prompt):
+    response = openai.Completion.create(
+        engine="text-davinci-002",  # GPT-3.5 engine
+        prompt=prompt,
+        temperature=0.7,
+        max_tokens=150,
+        n=1,
+        stop=None,
+        echo=True
+    )
+    return response.choices[0].text.strip()
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def main():
+    print("Hello! I'm your personal assistant. How can I help you today?")
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() in ["exit", "quit", "bye"]:
+            print("Goodbye!")
+            break
+        response = ask_chat_gpt(user_input)
+        print("Assistant:", response)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+if __name__ == "__main__":
+    main()
+
